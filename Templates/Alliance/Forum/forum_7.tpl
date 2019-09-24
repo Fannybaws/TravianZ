@@ -1,16 +1,20 @@
 <?php
 //////////////// made by TTMTT ////////////////
-if($session->access!=BANNED){
+	
 $tid = $_GET['tid'];
-$topics = $database->ShowTopic($tid);
-foreach($topics as $arr) {
-	$title = stripslashes($arr['title']);
-}
+$topic = reset($database->ShowTopic($tid));
+$forumData = reset($database->ForumCatEdit($topic['cat']));
+
+//Check if we're creating a post for a valid topic
+if(empty($topic) || $topic['close'] == 1 || ($forumData['forum_area'] == 3 && !$opt['opt5'])) $alliance->redirect($_GET);
+
+$title = stripslashes($topic['title']);
+
 ?>
-<form method="post" name="post" action="allianz.php?s=2&fid2=<?php echo $_GET['fid2']; ?>&pid=<?php echo $_GET['pid']; ?>&tid=<?php echo $_GET['tid']; ?>">
+<form method="post" name="post" action="allianz.php?s=2&fid2=<?php echo $topic['cat']; ?>&tid=<?php echo $_GET['tid']; ?>">
 	<input type="hidden" name="s" value="2">
-	<input type="hidden" name="pid" value="<?php echo $_GET['pid']; ?>">
 	<input type="hidden" name="tid" value="<?php echo $_GET['tid']; ?>">
+	<input type="hidden" name="fid2" value="<?php echo $topic['cat']; ?>">
 	<input type="hidden" name="newpost" value="1">
 
 	<input type="hidden" name="checkstr" value="c0d"><table cellpadding="1" cellspacing="1" id="new_post"><thead>
@@ -35,10 +39,10 @@ foreach($topics as $arr) {
 					<a href="javascript:void(0);" bbType="d" bbTag="b" ><div title="bold" alt="bold" class="bbButton bbBold"></div></a>
 					<a href="javascript:void(0);" bbType="d" bbTag="i" ><div title="italic" alt="italic" class="bbButton bbItalic"></div></a>
 					<a href="javascript:void(0);" bbType="d" bbTag="u" ><div title="underlined" alt="underlined" class="bbButton bbUnderscore"></div></a>
-					<a href="javascript:void(0);" bbType="d" bbTag="alliance0" ><div title="Alliance" alt="Alliance" class="bbButton bbAlliance"></div></a>
-					<a href="javascript:void(0);" bbType="d" bbTag="player0" ><div title="Player" alt="Player" class="bbButton bbPlayer"></div></a>
-					<a href="javascript:void(0);" bbType="d" bbTag="coor0" ><div title="Coordinates" alt="Coordinates" class="bbButton bbCoordinate"></div></a>
-					<a href="javascript:void(0);" bbType="d" bbTag="report0" ><div title="Report" alt="Report" class="bbButton bbReport"></div></a>
+					<a href="javascript:void(0);" bbType="d" bbTag="alliance" ><div title="Alliance" alt="Alliance" class="bbButton bbAlliance"></div></a>
+					<a href="javascript:void(0);" bbType="d" bbTag="player" ><div title="Player" alt="Player" class="bbButton bbPlayer"></div></a>
+					<a href="javascript:void(0);" bbType="d" bbTag="coor" ><div title="Coordinates" alt="Coordinates" class="bbButton bbCoordinate"></div></a>
+					<a href="javascript:void(0);" bbType="d" bbTag="report" ><div title="Report" alt="Report" class="bbButton bbReport"></div></a>
 					<a href="javascript:void(0);" bbWin="resources" id="text_resourceButton"><div title="Resources" alt="Resources" class="bbButton bbResource"></div></a>
 					<a href="javascript:void(0);" bbWin="smilies" id="text_smilieButton"><div title="Smilies" alt="Smilies" class="bbButton bbSmilie"></div></a>
 
@@ -70,7 +74,3 @@ foreach($topics as $arr) {
 
 <p class="btn"><input type="image" id="fbtn_ok" value="ok" name="s1" class="dynamic_img" src="img/x.gif" alt="OK" /></form></p>
 <span style="color: #DD0000"><b>Warning:</b> you can't use the values <b>[message]</b> or <b>[/message]</b> in your post because it can cause problem with bbcode system.</span>
-<?php }else{
-header("Location: banned.php");
-}
-?>

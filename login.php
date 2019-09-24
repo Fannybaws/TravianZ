@@ -10,12 +10,20 @@
 ##                                                                             ##
 #################################################################################
 
+use App\Utils\AccessLogger;
 
-error_reporting(E_ALL);
+if(!file_exists('var/installed') && @opendir('install')) {
+    header("Location: install/");
+    exit;
+}
+
 include("GameEngine/Account.php");
+AccessLogger::logRequest();
+
 if(isset($_GET['del_cookie'])) {
 	setcookie("COOKUSR","",time()-3600*24,"/");
 	header("Location: login.php");
+	exit;
 }
 if(!isset($_COOKIE['COOKUSR'])) {
 	$_COOKIE['COOKUSR'] = "";
@@ -32,19 +40,19 @@ $_SESSION[ 'csrf' ] = $key;
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
-	<title><?php echo SERVER_NAME; ?></title>
-		<link REL="shortcut icon" HREF="favicon.ico"/>
+	<title><?php echo SERVER_NAME; ?> - Login</title>
+		<link rel="shortcut icon" href="favicon.ico"/>
 	<meta name="content-language" content="en" />
 	<meta http-equiv="cache-control" content="max-age=0" />
 	<meta http-equiv="imagetoolbar" content="no" />
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<script src="mt-core.js?0faaa" type="text/javascript"></script>
-	<script src="mt-more.js?0faaa" type="text/javascript"></script>
-	<script src="unx.js?0faaa" type="text/javascript"></script>
-	<script src="new.js?0faaa" type="text/javascript"></script>
-	<link href="<?php echo GP_LOCATE; ?>lang/en/compact.css?f4b7c" rel="stylesheet" type="text/css" />
-	<link href="<?php echo GP_LOCATE; ?>lang/en/lang.css?f4b7c" rel="stylesheet" type="text/css" />
-	<link href="<?php echo GP_LOCATE ?>travian.css?f4b7c" rel="stylesheet" type="text/css" />
+	<script src="mt-core.js?0faab" type="text/javascript"></script>
+	<script src="mt-more.js?0faab" type="text/javascript"></script>
+	<script src="unx.js?f4b7j" type="text/javascript"></script>
+	<script src="new.js?0faab" type="text/javascript"></script>
+	<link href="<?php echo GP_LOCATE; ?>lang/en/compact.css?f4b7h" rel="stylesheet" type="text/css" />
+	<link href="<?php echo GP_LOCATE; ?>lang/en/lang.css?f4b7d" rel="stylesheet" type="text/css" />
+	<link href="<?php echo GP_LOCATE ?>travian.css?f4b7d" rel="stylesheet" type="text/css" />
 		<link href="<?php echo GP_LOCATE ?>lang/en/lang.css" rel="stylesheet" type="text/css" />
 	   </head>
 
@@ -73,10 +81,10 @@ else
 <h5><img class="img_u04" src="img/x.gif" alt="login" /></h5>
 <p><?php echo COOKIES; ?></p>
 <?php
-$stime = strtotime(START_DATE)-strtotime(date('m/d/Y'))+strtotime(START_TIME);
+$stime = strtotime(START_DATE) - strtotime(date('d.m.y')) + strtotime(START_TIME);
 if($stime > time()){
 ?>
-<br/><center><big>Server will start in: </big></center>
+<br/><div style="text-align: center"><big>Server will start in: </big></div>
 <script language="JavaScript">
 TargetDate = "<?php echo START_DATE; ?> <?php echo START_TIME; ?>";
 CountActive = true;
@@ -150,9 +158,9 @@ CountBack(gsecs);
 <input type="hidden" name="ft" value="a4" />
 <script type="text/javascript">
 Element.implement({
-	 //imgid: falls zu dem link ein pfeil geh?rt kann dieser "auf/zugeklappt" werden
+	 //imgid: if an arrow belongs to the link this can be "opened"
 	 showOrHide: function(imgid) {
-		 //einblenden
+		 //insert
 		 if (this.getStyle('display') == 'none')
 		 {
 			 if (imgid != '')
@@ -160,7 +168,7 @@ Element.implement({
 				 $(imgid).className = 'open';
 			 }
 		 }
-		 //ausblenden
+		 //hide
 		 else
 		 {
 			 if (imgid != '')
@@ -187,7 +195,7 @@ Element.implement({
 
 <p class="btn">
 	<!--<input type="hidden" name="e1d9d0c" value="" />-->
-		<input type="image" value="login" name="s1"	onclick="xy();" id="btn_login" class="dynamic_img" src="img/x.gif" alt="login button"	/>
+		<button value="login" name="s1"	onclick="xy();" id="btn_login" class="trav_buttons" alt="login button"	/> Login </button>
 </p>
 
 </form>
@@ -206,6 +214,10 @@ if($form->getError("activate") != "") {
 	".EMAIL_FOLLOW."<br>
 	<a href=\"activate.php?usr=".$form->getError("activate")."\">".VERIFY_EMAIL."</a>
 	</p>";
+}
+if($form->getError("vacation") != "") {
+echo "<p class=\"error_box\">
+<span class=\"error\">".$form->getError("vacation")."</span></p>";
 }
 ?>
 </div>

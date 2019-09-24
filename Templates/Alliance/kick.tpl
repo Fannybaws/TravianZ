@@ -1,12 +1,9 @@
 <?php
-if(isset($aid)) {
-$aid = $aid;
-}
-else {
-$aid = $session->alliance;
-}
+if(!isset($aid)) $aid = $session->alliance;
+
 $memberlist = $database->getAllMember($aid);
 $allianceinfo = $database->getAlliance($aid);
+
 echo "<h1>".$allianceinfo['tag']." - ".$allianceinfo['name']."</h1>";
 include("alli_menu.tpl"); 
 ?>
@@ -27,7 +24,9 @@ include("alli_menu.tpl");
 								<select name="a_user" class="name dropdown">
 								<?php
                                 foreach($memberlist as $member) {
-                                echo "<option value=".$member['id'].">".$member['username']."</option>";
+                                	if ($member['id'] != $session->uid) {
+                                		echo "<option value=".$member['id'].">".$member['username']."</option>";
+                                	}
                                 }
                                 ?>
                                 </select>
@@ -39,7 +38,7 @@ include("alli_menu.tpl");
 					<input type="hidden" name="o" value="2">
 					<input type="hidden" name="s" value="5">
 					<input type="hidden" name="a" value="2">                    
-					<input type="image" value="ok" name="s1" id="btn_ok" class="dynamic_img" src="img/x.gif" alt="OK" />
+					<button value="ok" name="s1" id="btn_ok" class="trav_buttons" alt="OK" /> Ok </button>
 				</p>
 			</form>
-			<p class="error"></p>
+			<p class="error"><?php echo $form->getError("perm"); ?></p>

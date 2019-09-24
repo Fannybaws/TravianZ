@@ -9,11 +9,13 @@
 | Copyright:   TravianX Project All rights reserved       |
 \** --------------------------------------------------- **/
 
-   $tribe1 = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE tribe = 1");
-   $tribe2 = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE tribe = 2");
-   $tribe3 = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE tribe = 3");
-   $tribes = array(mysql_num_rows($tribe1), mysql_num_rows($tribe2), mysql_num_rows($tribe3));
-   $users = mysql_num_rows(mysql_query("SELECT * FROM " . TB_PREFIX . "users WHERE tribe!=0 AND tribe!=4 AND tribe!=5")); ?>
+   $tribe1 = mysqli_fetch_array(mysqli_query($database->dblink,"SELECT Count(*) as Total FROM ".TB_PREFIX."users WHERE tribe = 1"), MYSQLI_ASSOC);
+   $tribe2 = mysqli_fetch_array(mysqli_query($database->dblink,"SELECT Count(*) as Total FROM ".TB_PREFIX."users WHERE tribe = 2"), MYSQLI_ASSOC);
+   $tribe3 = mysqli_fetch_array(mysqli_query($database->dblink,"SELECT Count(*) as Total FROM ".TB_PREFIX."users WHERE tribe = 3"), MYSQLI_ASSOC);
+   $tribes = [$tribe1['Total'], $tribe2['Total'], $tribe3['Total']];
+   $users = mysqli_fetch_array(mysqli_query($database->dblink,"SELECT Count(*) as Total FROM " . TB_PREFIX . "users WHERE tribe > 0 AND tribe < 4"), MYSQLI_ASSOC);
+   $users = $users['Total'];
+?>
 
     <table cellpadding="1" cellspacing="1" id="world_player" class="world">
         <thead>
@@ -34,7 +36,7 @@
                 <th>Active players</th>
 
                 <td><?php
-                   $active = mysql_num_rows(mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE ".time()."-timestamp < (3600*24) AND tribe!=0 AND tribe!=4 AND tribe!=5"));
+                   $active = mysqli_num_rows(mysqli_query($database->dblink,"SELECT * FROM ".TB_PREFIX."users WHERE timestamp > ".(time() - (3600*24))." AND tribe!=0 AND tribe!=4 AND tribe!=5"));
                    echo $active; ?></td>
             </tr>
 
@@ -42,8 +44,13 @@
                 <th>Players online</th>
 
                 <td><?php
-                   $online = mysql_num_rows(mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE ".time()."-timestamp < (60*10) AND tribe!=0 AND tribe!=4 AND tribe!=5"));
-                   echo $online; ?></td>
+                    $online = mysqli_query($database->dblink,"SELECT Count(*) as Total FROM ".TB_PREFIX."users WHERE timestamp > ".(time() - (60*10))." AND tribe!=0 AND tribe!=4 AND tribe!=5");
+                    if (!empty($online)) {
+                   		echo mysqli_fetch_assoc($online)['Total'];
+                   	} else {
+                   		echo 0;
+                   	}
+                   ?></td>
             </tr>
         </tbody>
     </table>
@@ -67,37 +74,19 @@
             <tr>
                 <td>Romans</td>
 
-                <td><?php
-                   echo $tribes[0]; ?></td>
-
-                <td><?php
-                   $percents = 100 * (($tribes[0]) / $users);
-                   echo $percents = intval($percents);
-                   echo "%"; ?></td>
+                <td><?php echo $tribes[0]; ?></td>
+				<td><?php echo ($users > 0) ? ($percents[0] = round(100 * ($tribes[0] / $users), 2))."%" : '---'; ?></td>
             </tr>
-
             <tr>
                 <td>Teutons</td>
 
-                <td><?php
-                   echo $tribes[1]; ?></td>
-
-                <td><?php
-                   $percents = 100 * ($tribes[1] / $users);
-                   echo $percents = intval($percents);
-                   echo "%"; ?></td>
+                <td><?php echo $tribes[1]; ?></td>
+				<td><?php echo ($users > 0) ? ($percents[1] = round(100 * ($tribes[1] / $users), 2))."%" : "---"; ?></td>
             </tr>
-
             <tr>
                 <td>Gauls</td>
-
-                <td><?php
-                   echo $tribes[2]; ?></td>
-
-                <td><?php
-                   $percents = 100 * ($tribes[2] / $users);
-                   echo $percents = intval($percents);
-                   echo "%"; ?></td>
+                <td><?php echo $tribes[2]; ?></td>
+                <td><?php echo ($users > 0) ? (100-$percents[0]-$percents[1])."%" : '---'; ?></td>
             </tr>
         </tbody>
     </table>

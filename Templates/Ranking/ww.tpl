@@ -1,7 +1,7 @@
 <?php 
 if (WW == True) 
 { 
-    $result = mysql_query("select " . TB_PREFIX . "users.id, " . TB_PREFIX . "users.username," . TB_PREFIX . "users.alliance, " . TB_PREFIX . "fdata.wwname, " . TB_PREFIX . "fdata.f99, " . TB_PREFIX . "vdata.name, " . TB_PREFIX . "fdata.vref  
+    $result = mysqli_query($database->dblink,"select " . TB_PREFIX . "users.id, " . TB_PREFIX . "users.username," . TB_PREFIX . "users.alliance, " . TB_PREFIX . "fdata.wwname, " . TB_PREFIX . "fdata.f99, " . TB_PREFIX . "vdata.name, " . TB_PREFIX . "fdata.vref  
                         FROM " . TB_PREFIX . "users  
                         INNER JOIN " . TB_PREFIX . "vdata ON " . TB_PREFIX . "users.id = " . TB_PREFIX . "vdata.owner 
                         INNER JOIN " . TB_PREFIX . "fdata ON " . TB_PREFIX . "fdata.vref = " . TB_PREFIX . "vdata.wref 
@@ -14,24 +14,24 @@ if (WW == True)
         </tr> 
         <tr> 
             <td></td> 
-            <td>Player</td> 
-            <td>Name</td> 
-            <td>Alliance</td> 
-            <td>Level</td> 
+            <td><?php echo PLAYER; ?></td> 
+            <td><?php echo NAME; ?></td> 
+            <td><?php echo ALLIANCE; ?></td> 
+            <td><?php echo LEVEL; ?></td> 
             <td></td> 
         </tr> 
     </thead> 
     <tbody>  
         <?php 
-        $cont = 1; 
-        while ($row = mysql_fetch_array($result)) 
+        $count = 0; 
+        while ($row = mysqli_fetch_array($result)) 
         { 
-            $ally = $database->getAlliance($row[alliance]); 
-            $query = @mysql_query('SELECT * FROM `' . TB_PREFIX . 'ww_attacks` WHERE `vid` = ' . $row['vref'] . ' ORDER BY `attack_time` ASC LIMIT 1'); 
-            $row2 = @mysql_fetch_assoc($query); 
+            $ally = $database->getAlliance($row['alliance']); 
+            $query = @mysqli_query($database->dblink,'SELECT * FROM `' . TB_PREFIX . 'ww_attacks` WHERE `vid` = ' . $row['vref'] . ' ORDER BY `attack_time` ASC LIMIT 1'); 
+            $row2 = @mysqli_fetch_assoc($query); 
         ?> 
         <tr> 
-              <td><?php echo $cont; $cont++; ?>.</td> 
+              <td><?php echo ++$count; ?>.</td> 
             <td><?php echo "<a href=\"karte.php?d=" . $row['vref'] . "&amp;c=" . $generator->getMapCheck($row['vref']) . "\">"; ?><?php echo $row['username']; ?></a></td> 
               <td><?php echo $row['wwname']; ?></td> 
             <td><a href="allianz.php?aid=<?php echo $ally['id']; ?>"><?php echo $ally['tag']; ?></a></td> 
@@ -44,9 +44,18 @@ if (WW == True)
            </tr> 
         <?php 
         } 
-} 
-else 
-{ 
-    header("Location: statistiken.php"); 
-} 
-?>
+        
+            if($count == 0){        
+        ?>
+        <tr>
+        <td class="none" colspan="7"><?php echo NO_WW; ?></td>
+        </tr>    
+		<?php
+            }
+        }
+        else
+        {
+            header("Location: statistiken.php");
+            exit;
+        } 
+        ?>

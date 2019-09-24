@@ -3,7 +3,7 @@
 include_once ("config.php");
 include_once ("Lang/".LANG.".php");
 
-$pattern = array();
+$pattern = [];
 $pattern[0] = "/\[b\](.*?)\[\/b\]/is";
 $pattern[1] = "/\[i\](.*?)\[\/i\]/is";
 $pattern[2] = "/\[u\](.*?)\[\/u\]/is";
@@ -58,10 +58,10 @@ $pattern[50] = "/\[tid48\]/";
 $pattern[51] = "/\[tid49\]/";
 $pattern[52] = "/\[tid50\]/";
 $pattern[53] = "/\[hero\]/";
-$pattern[54] = "/\[l\]/";
-$pattern[55] = "/\[cl\]/";
-$pattern[56] = "/\[i\]/";
-$pattern[57] = "/\[c\]/";
+$pattern[54] = "/\[lumber\]/";
+$pattern[55] = "/\[clay\]/";
+$pattern[56] = "/\[iron\]/";
+$pattern[57] = "/\[crop\]/";
 $pattern[58] = "/\*aha\*/";
 $pattern[59] = "/\*angry\*/";
 $pattern[60] = "/\*cool\*/";
@@ -94,7 +94,7 @@ $pattern[86] = "/\*veryangry\*/";
 $pattern[87] = "/\*veryhappy\*/";
 $pattern[88] = "/\;\)/";
 
-$replace = array();
+$replace = [];
 $replace[0] = "<b>$1</b>";
 $replace[1] = "<i>$1</i>";
 $replace[2] = "<u>$1</u>";
@@ -188,93 +188,68 @@ $replace[85] = "<img class='smiley tongue' src='img/x.gif' alt='*tongue*' title=
 $replace[86] = "<img class='smiley veryangry' src='img/x.gif' alt='*veryangry*' title='*veryangry*'>";
 $replace[87] = "<img class='smiley veryhappy' src='img/x.gif' alt='*veryhappy*' title='*veryhappy*'>";
 $replace[88] = "<img class='smiley wink' src='img/x.gif' alt=';)' title=';)'>";
-for($i=0;$i<=$alliance;$i++){
-$pattern[89+$i] = "/\[alliance".$i."\](.*?)\[\/alliance".$i."\]/is";
-${'bbcoded1_'.$i} = preg_replace($pattern[89+$i], "$1", $input);
-${'bbcoded1_'.$i} = preg_replace('/\[\/alliance'.$i.'\](.*?)\[\/message\]/is', '', $input);
-${'bbcoded1_'.$i} = preg_replace('/\[message\](.*?)\[alliance'.$i.'\]/is', '', ${'bbcoded1_'.$i});
-$aname = $database->getAllianceID(${'bbcoded1_'.$i});
-if($aname != ""){
-$replace[89+$i] = "<a href=allianz.php?aid=$aname>$1</a>";
-}else{
-$replace[89+$i] = "alliance not exist";
-}
-$rep1 = 90+$i;
-}
-for($i=0;$i<=$player;$i++){
-$pattern[$rep1+$i] = "/\[player".$i."\](.*?)\[\/player".$i."\]/is";
-${'bbcoded2_'.$i} = preg_replace($pattern[$rep1+$i], "$1", $input);
-${'bbcoded2_'.$i} = preg_replace('/\[\/player'.$i.'\](.*?)\[\/message\]/is', '', $input);
-${'bbcoded2_'.$i} = preg_replace('/\[message\](.*?)\[player'.$i.'\]/is', '', ${'bbcoded2_'.$i});
-$uname = $database->getUserField(${'bbcoded2_'.$i}, "id", 1);
-if($uname != ""){
-$replace[$rep1+$i] = "<a href=spieler.php?uid=$uname>$1</a>";
-}else{
-$replace[$rep1+$i] = "player not exist";
-}
-$rep2 = $rep1+$i+1;
-}
-for($i=0;$i<=$report;$i++){
-$pattern[$rep2+$i] = "/\[report".$i."\](.*?)\[\/report".$i."\]/is";
-${'bbcoded3_'.$i} = preg_replace($pattern[$rep2+$i], "$1", $input);
-${'bbcoded3_'.$i} = preg_replace('/\[\/report'.$i.'\](.*?)\[\/message\]/is', '', $input);
-${'bbcoded3_'.$i} = preg_replace('/\[message\](.*?)\[report'.$i.'\]/is', '', ${'bbcoded3_'.$i});
-$report = count($database->getNotice4(${'bbcoded3_'.$i}));
-if($report > 0){
-$topic = $database->getNotice2(${'bbcoded3_'.$i},"topic");
-$ally = $database->getNotice2(${'bbcoded3_'.$i},"ally");
-$replace[$rep2+$i] = "<a href=berichte.php?id=$1&aid=$ally>$topic</a>";
-}else{
-$replace[$rep2+$i] = "report not exist";
-}
-$rep3 = $rep2+$i+1;
-}
-for($i=0;$i<=$coor;$i++){
-$pattern[$rep3+$i] = "/\[coor".$i."\](.*?)\[\/coor".$i."\]/is";
-${'bbcoded4_'.$i} = preg_replace($pattern[$rep3+$i], "$1", $input);
-${'bbcoded4_'.$i} = preg_replace('/\[\/coor'.$i.'\](.*?)\[\/message\]/is', '', $input);
-${'bbcoded4_'.$i} = preg_replace('/\[message\](.*?)\[coor'.$i.'\]/is', '', ${'bbcoded4_'.$i});
-for($x = 0; $x < 401; $x++) {
-if(preg_match('/^'.$x.'/', ${'bbcoded4_'.$i})){
-$xx = 1;
-$cx = $x;
-}
-}
-for($x = 0; $x > -401; $x--) {
-if(preg_match('/^'.$x.'/', ${'bbcoded4_'.$i})){
-$xx = 1;
-$cx = $x;
-}
-}
-for($y = 0; $y < 401; $y++) {
-if(preg_match('/-'.$y.'$/', ${'bbcoded4_'.$i})){
-$yy = 1;
-$cy = $y*(-1);
-}else if(preg_match('/'.$y.'$/', ${'bbcoded4_'.$i})){
-$yy = 1;
-$cy = $y;
-}
-}
-if(preg_match('/|/', ${'bbcoded4_'.$i}) && $xx == 1 && $yy == 1){
-$wref = $database->getVilWref($cx,$cy);
-$cwref = $generator->getMapCheck($wref);
-if($wref != ""){
-$wref1 = $database->getVillageType3($wref);
-if($wref1['oasistype'] == 0 && $wref1['occupied'] == 1){
-$vname = $database->getVillageField($wref,"name");
-}else if($wref1['oasistype'] == 0 && $wref1['occupied'] == 0){
-$vname = "Abandoned valley";
-}else if($wref1['oasistype'] != 0 && $wref1['occupied'] == 1){
-$vname = "Occupied Oasis";
-}else if($wref1['oasistype'] != 0 && $wref1['occupied'] == 0){
-$vname = "Unoccupied Oasis";
-}
-$replace[$rep3+$i] = "<a href=karte.php?d=$wref&c=$cwref>$vname($cx|$cy)</a>";
-}
-}
-}
+
+// replace alliance placeholders
+$input = preg_replace_callback(
+    "/\[alliance(\d{0,20})\]([^\]]*)\[\/alliance\d{0,20}\]/is",
+    function($matches) {
+        global $database;
+
+        $aname = $database->getAllianceName($matches[2]);
+        if (!empty($aname)) return "<a href=allianz.php?aid=$matches[2]>".$aname."</a>";    
+    	else return "Alliance not found!";
+    },
+    $input);
+
+// replace player placeholders
+$input = preg_replace_callback(
+    "/\[player(\d{0,20})\]([^\]]*)\[\/player\d{0,20}\]/is",
+    function($matches) {
+        global $database;
+        
+        $uname = $database->getUserField((int) $matches[2], "username", 0);
+        if (!empty($uname) && $uname != "[?]")  return "<a href=spieler.php?uid=$matches[2]>".$uname."</a>";       
+        else return "Player not found!";
+    },
+    $input);
+
+// replace report placeholders
+$input = preg_replace_callback(
+    "/\[report(\d{0,20})\]([^\]]*)\[\/report\d{0,20}\]/is",
+    function($matches) {
+        global $database;
+		
+        $reportID = $matches[1] > 0 ? $matches[1] : $matches[2];
+        $report = $database->getNotice2((int) $reportID, null, false);
+
+        if (!empty($report)) return "<a href=berichte.php?id=".$reportID.">".$report['topic']."</a>";          
+    	else return "Report not found!";
+    },
+    $input);
+
+// replace coordinate placeholders
+$input = preg_replace_callback(
+    "/\[coor(\d{0,20})\]([^\]]*)\[\/coor\d{0,20}\]/is",
+    function($matches) {
+        global $generator, $database;
+        
+        $name = "";
+        $coordinates = explode("|", $matches[2]);
+        $wRef = $database->getVilWref($coordinates[0], $coordinates[1]);
+        $cwref = $generator->getMapCheck($wRef);
+        $state = $database->getVillageType($wRef);
+        if($state > 0){
+        	if($database->getVillageState($wRef)) $name = $database->getVillageField($wRef, 'name');
+        	else $name = ABANDVALLEY;
+        }
+        else $name = $database->getOasisInfo($wRef)['name'];
+        
+        if(!empty($name)) return "<a href=karte.php?d=".$wRef."&amp;c=".$cwref.">".$name." (".$coordinates[0]."|".$coordinates[1].")"."</a>";
+        return "Village not found!";
+    },
+    $input);
+
 $input = preg_replace('/\[message\]/', '', $input);
 $input = preg_replace('/\[\/message\]/', '', $input);
 $bbcoded = preg_replace($pattern, $replace, $input);
-
 ?>

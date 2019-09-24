@@ -1,11 +1,11 @@
 <table id="coords" cellpadding="1" cellspacing="1">
-<input type="hidden" name="disabledr" value="<?php echo $disabledr; ?>">
-<input type="hidden" name="disabled" value="<?php echo $disabled; ?>">
+<input type="hidden" name="disabledr" value="<?php echo (isset($disabledr) ? $disabledr : ''); ?>">
+<input type="hidden" name="disabled" value="<?php echo (isset($disabled) ? $disabled : ''); ?>">
     <tbody><tr>
         <td class="sel">
 
             <label>
-                <input class="radio" name="c" <?php if (!$checked) {?> checked=checked <?php }?>value="2" type="radio" <?php echo $disabledr; ?>>
+                <input class="radio" name="c" <?php if (!isset($checked) || !$checked) {?> checked=checked <?php }?>value="2" type="radio" <?php echo (isset($disabledr) ? $disabledr : ''); ?>>
                 Reinforcement
             </label>
         </td>
@@ -29,7 +29,7 @@
     <tr>
         <td class="sel">
             <label>
-                <input class="radio" name="c" <?php echo $checked; ?> value="4" type="radio">
+                <input class="radio" name="c" <?php echo (isset($checked) ? $checked : ''); ?> value="4" type="radio">
                 Raid
             </label>
         </td>
@@ -52,7 +52,7 @@ $coor['y']=$form->getValue("y");
     </tr>
 </tbody></table>
 
-        <input value="ok" name="s1" id="btn_ok" class="dynamic_img" src="img/x.gif" alt="OK" type="image" onclick="this.disabled=true;this.form.submit();">
+       <button value="ok" name="s1" id="btn_ok" class="trav_buttons" alt="OK" onclick="this.disabled=true;this.form.submit();" /> Ok </button>
     </form>
 <p class="error"><?php echo $form->getError("error"); ?></p>
 </div>

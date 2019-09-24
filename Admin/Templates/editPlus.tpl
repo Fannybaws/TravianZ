@@ -11,7 +11,6 @@
 
 $id = $_GET['uid'];
 $uid = $_GET['uid'];
-$user = $database->getUserArray($id,1);
 if(isset($id))
 {
 	?>
@@ -19,8 +18,9 @@ if(isset($id))
 		<input type="hidden" name="admid" id="admid" value="<?php echo $_SESSION['id']; ?>">
 		<input type="hidden" name="uid" value="<?php echo $uid; ?>" />
 		<input type="hidden" name="id" value="<?php echo $id; ?>" />
-			<br /><br />
-
+			<br>
+			<p>Adding the value in days it is delivered to the already existing value. In order to remove the bonus it is necessary to put a minus value.</p>
+			<br>
 			<table id="profile">
 				<tbody>
 					<td class="details">

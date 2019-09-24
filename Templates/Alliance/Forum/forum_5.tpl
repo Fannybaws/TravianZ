@@ -5,11 +5,16 @@
 ##                     FIX BY RONIX                       ##
 ##                       TRAVIANZ                         ##
 ############################################################
-if($session->access!=BANNED){
+
+$cat_id = $_GET['fid'];
+$forumData = reset($database->ForumCatEdit($cat_id));
+
+//Check if we can create the thread or not
+if($forumData['forum_area'] == 3 && !$opt['opt5']) $alliance->redirect($_GET);
+
 ?>
-<form method="post" name="post" action="allianz.php?s=2&fid=<?php echo $_GET['fid']; ?>&pid=<?php echo $_GET['pid']; ?>">
+<form method="post" name="post" action="allianz.php?s=2&fid=<?php echo $_GET['fid']; ?>">
 	<input type="hidden" name="newtopic" value="1">
-	<input type="hidden" name="pid" value="<?php echo $_GET['pid']; ?>">
 	<input type="hidden" name="fid" value="<?php echo $_GET['fid']; ?>">
 	<input type="hidden" name="ac" value="newtopic">
 
@@ -36,10 +41,10 @@ if($session->access!=BANNED){
 					<a href="javascript:void(0);" bbType="d" bbTag="b" ><div title="bold" alt="bold" class="bbButton bbBold"></div></a>
 					<a href="javascript:void(0);" bbType="d" bbTag="i" ><div title="italic" alt="italic" class="bbButton bbItalic"></div></a>
 					<a href="javascript:void(0);" bbType="d" bbTag="u" ><div title="underlined" alt="underlined" class="bbButton bbUnderscore"></div></a>
-					<a href="javascript:void(0);" bbType="d" bbTag="alliance0" ><div title="Alliance" alt="Alliance" class="bbButton bbAlliance"></div></a>
-					<a href="javascript:void(0);" bbType="d" bbTag="player0" ><div title="Player" alt="Player" class="bbButton bbPlayer"></div></a>
-					<a href="javascript:void(0);" bbType="d" bbTag="coor0" ><div title="Coordinates" alt="Coordinates" class="bbButton bbCoordinate"></div></a>
-					<a href="javascript:void(0);" bbType="d" bbTag="report0" ><div title="Report" alt="Report" class="bbButton bbReport"></div></a>
+					<a href="javascript:void(0);" bbType="d" bbTag="alliance" ><div title="Alliance" alt="Alliance" class="bbButton bbAlliance"></div></a>
+					<a href="javascript:void(0);" bbType="d" bbTag="player" ><div title="Player" alt="Player" class="bbButton bbPlayer"></div></a>
+					<a href="javascript:void(0);" bbType="d" bbTag="coor" ><div title="Coordinates" alt="Coordinates" class="bbButton bbCoordinate"></div></a>
+					<a href="javascript:void(0);" bbType="d" bbTag="report" ><div title="Report" alt="Report" class="bbButton bbReport"></div></a>
 					<a href="javascript:void(0);" bbWin="resources" id="text_resourceButton"><div title="Resources" alt="Resources" class="bbButton bbResource"></div></a>
 
 					<a href="javascript:void(0);" bbWin="smilies" id="text_smilieButton"><div title="Smilies" alt="Smilies" class="bbButton bbSmilie"></div></a>
@@ -108,7 +113,7 @@ Option 8: <input class="text" type="text" name="option_8" maxlength="100" style=
 <tr>
 	<th>ends on</th>
 	<td>
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 <!--
 	function voteEnd() {
 	if (document.post.umfrage_ende.checked == true){
@@ -137,7 +142,3 @@ Option 8: <input class="text" type="text" name="option_8" maxlength="100" style=
 
 <p class="btn"><input type="image" id="fbtn_ok" value="ok" name="s1" class="dynamic_img" src="img/x.gif" alt="OK" /></form></p>
 <span style="color: #DD0000"><b>Warning:</b> you can't use the values <b>[message]</b> or <b>[/message]</b> in your post because it can cause problem with bbcode system.</span>
-<?php }else{
-header("Location: banned.php");
-}
-?>

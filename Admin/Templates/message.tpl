@@ -12,7 +12,7 @@
 <style>
 	.del {width:12px; height:12px; background-image: url(img/admin/icon/del.gif);}
 </style>
-<link href="../<?php echo GP_LOCATE; ?>lang/en/compact.css?f4b7c" rel="stylesheet" type="text/css">
+<link href="../<?php echo GP_LOCATE; ?>lang/en/compact.css?f4b7i" rel="stylesheet" type="text/css">
 <table id="member" style="width:225px">
   <thead>
 	<tr>
@@ -31,14 +31,7 @@
 <br>
 
 <?php
-error_reporting(0);
-if($_GET['nid'] and ereg('^[0-9]', $_GET['nid']))
-{
-	include('msg.tpl');
-}
-elseif($_GET['bid'] and ereg('^[0-9]', $_GET['bid']))
-{
-	include('report.tpl');
-}
+if($_GET['nid'] && is_numeric($_GET['nid'])) include('msg.tpl');
+elseif($_GET['bid'] && is_numeric($_GET['bid'])) include('report.tpl');
 ?>
 

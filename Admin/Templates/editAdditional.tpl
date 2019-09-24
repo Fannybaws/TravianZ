@@ -13,7 +13,6 @@ if (!isset($_SESSION)) {
 }
 if($_SESSION['access'] < ADMIN) die("Access Denied: You are not Admin!");
 $id = $_GET['uid'];
-$user = $database->getUserArray($id,1);
 $dur=$user['protect']-time();
 $protect=0;
 if($dur>43200) {
@@ -22,6 +21,12 @@ if($dur>43200) {
 if(isset($id))
 {
 	?>
+<script LANGUAGE="JavaScript">
+function go_url(url) {
+	location=url;
+	return(false);
+}
+</script>	
 	<form action="../GameEngine/Admin/Mods/additional.php" method="POST">
 		<input type="hidden" name="admid" id="admid" value="<?php echo $_SESSION['id']; ?>">
 		<input type="hidden" name="id" value="<?php echo $id; ?>" />
@@ -130,9 +135,15 @@ if(isset($id))
 					</tr>
 					
 				</tbody>
+				<thead>
+				<tr>
+					<td colspan="2">
+						<input style="float: right" name="save" type="image" id="btn_save" class="dynamic_img" src="img/x.gif" value="save" alt="save" />
+						<input style="float: left" name="back" type="image" id="btn_back" class="dynamic_img" src="img/x.gif" value="back" alt="back" onclick="return go_url('../Admin/admin.php?p=player&uid=<?php echo $_GET["uid"];?>')" />
+					</td>
+				</tr>
+				</thead>				
 			</table>
-			<br />
-			<center><input type="image" value="submit" src="../img/admin/b/ok1.gif"></center>
 		</form>
 	<?php
 }

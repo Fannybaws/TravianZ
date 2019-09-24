@@ -3,27 +3,27 @@ $units = $database->getMovement(3,$village->wid,0);
 $total_for = count($units);
 
 for($y=0;$y<$total_for;$y++){
-$timer += 1;
+$session->timer++;
 
 if($units[$y]['attack_type'] == 2){
-	$attack_type = "Reinforcing";
+	$attack_type = REINFORCEMENTFOR;
 	}
 if($units[$y]['attack_type'] == 1){
-	$attack_type = "Scouting";
+	$attack_type = SCOUTING;
 	}
 if($units[$y]['attack_type'] == 3){
-	$attack_type = "Attack to";
+	$attack_type = ATTACK_ON;
 	}
 if($units[$y]['attack_type'] == 4){
-	$attack_type = "Raid to";
+	$attack_type = RAID_ON;
 	}
 $isoasis = $database->isVillageOases($units[$y]['to']);
-if ($isoasis ==0){ 	
+if ($isoasis ==0){
 $to = $database->getMInfo($units[$y]['to']);
 } else {
 $to = $database->getOMInfo($units[$y]['to']);}
 ?>
-<table class="troop_details" cellpadding="1" cellspacing="1">            
+<table class="troop_details" cellpadding="1" cellspacing="1">
 	<thead>
 		<tr>
 			<td class="role"><a href="karte.php?d=<?php echo $village->wid."&c=".$generator->getMapCheck($village->wid); ?>"><?php echo $village->vname; ?></a></td>
@@ -34,14 +34,14 @@ $to = $database->getOMInfo($units[$y]['to']);}
 			<?php
                   echo "<tr><th>&nbsp;</th>";
                   for($i=($session->tribe-1)*10+1;$i<=$session->tribe*10;$i++) {
-                  	echo "<td><img src=\"img/x.gif\" class=\"unit u$i\" title=\"".$technology->getUnitName($i)."\" alt=\"".$technology->getUnitName($i)."\" /></td>";	
+                  	echo "<td><img src=\"img/x.gif\" class=\"unit u$i\" title=\"".$technology->getUnitName($i)."\" alt=\"".$technology->getUnitName($i)."\" /></td>";
                   }
                   if($units[$y]['t11'] != 0) {
-                   echo "<td><img src=\"img/x.gif\" class=\"unit uhero\" title=\"Hero\" alt=\"Hero\" /></td>";    
+                   echo "<td><img src=\"img/x.gif\" class=\"unit uhero\" title=\"Hero\" alt=\"Hero\" /></td>";
                   }
 			?>
 			</tr>
- <tr><th>Troops</th>
+ <tr><th><?php echo TROOPS;?></th>
             <?php
 			if($units[$y]['t11'] != 0) {
 				$end = 12;
@@ -59,18 +59,33 @@ $to = $database->getOMInfo($units[$y]['to']);}
             }
             ?>
            </tr></tbody>
+        <?php if(NEW_FUNCTIONS_DISPLAY_CATAPULT_TARGET){
+			if($units[$y]['t8'] > 0 && $units[$y]['attack_type'] == 3 && !$database->isVillageOases($units[$y]['to'])){ ?>
+		<tbody>
+			<tr>
+				<th><?php echo CATAPULT_TARGET;?></th>
+				<td style="text-align: center" colspan="5">
+					<?php echo $units[$y]['ctar1'] == 0 ? "Random" : Building::procResType($units[$y]['ctar1']); ?>
+				</td>
+				<td style="text-align: center" colspan="<?php if($units[$y]['t11'] == 0) {echo"5";}else{echo"6";}?>">
+					<?php echo $units[$y]['ctar2'] == 99 ? "Random" : ($units[$y]['ctar2'] == 0 ? "-" : Building::procResType($units[$y]['ctar2'])); ?>
+				</td>
+			</tr>
+		</tbody>
+			<?php }
+		} ?>
 		<tbody class="infos">
 			<tr>
-				<th>Arrival</th>
+				<th><?php echo ARRIVAL;?></th>
 				<td colspan="<?php if($units[$y]['t11'] == 0) {echo"10";}else{echo"11";}?>">
 				<?php
-				    echo "<div class=\"in small\"><span id=timer$timer>".$generator->getTimeFormat($units[$y]['endtime']-time())."</span> h</div>";
+				echo "<div class=\"in small\"><span id=timer$session->timer>".$generator->getTimeFormat($units[$y]['endtime']-time())."</span> h</div>";
 				    $datetime = $generator->procMtime($units[$y]['endtime']);
-				    echo "<div class=\"at small\">";
+				    echo "<div class=\"at\">";
 				    if($datetime[0] != "today") {
-				    echo "on ".$datetime[0]." ";
+				    echo "".ON." ".$datetime[0]." ";
 				    }
-				    echo "at ".$datetime[1]."</div>";
+				    echo "".AT." ".$datetime[1]."</div>";
 					if (($units[$y]['starttime']+90)>time()){
 				?>
                     <div class="abort"><a href="build.php?id=<?php echo $_GET['id']."&mode=troops&cancel=1&moveid=".$units[$y]['moveid']; ?>"><img src="img/x.gif" class="del" /></a></div>
@@ -83,21 +98,21 @@ $to = $database->getOMInfo($units[$y]['to']);}
 		<?php
 		}
 		?>
-        
+
         <?php
-        $settlers = $database->getMovement(5,$village->wid,0);   
+        $settlers = $database->getMovement(5,$village->wid,0);
         if($settlers){
         $total_for = count($settlers);
 
 for($y=0;$y<$total_for;$y++){
-$timer += 1;
-    
+    $session->timer++;
+
 ?>
-<table class="troop_details" cellpadding="1" cellspacing="1">            
+<table class="troop_details" cellpadding="1" cellspacing="1">
     <thead>
         <tr>
             <td class="role"><a href="karte.php?d=<?php echo $village->wid."&c=".$generator->getMapCheck($village->wid); ?>"><?php echo $village->vname; ?></a></td>
-            <td colspan="10"><a href="karte.php?d=<?php echo $settlers[$y]['to']."&c=".$generator->getMapCheck($settlers[$y]['to']); ?>">Found new village</a></td>
+            <td colspan="10"><a href="karte.php?d=<?php echo $settlers[$y]['to']."&c=".$generator->getMapCheck($settlers[$y]['to']); ?>"><?php echo FOUNDNEWVILLAGE;?></a></td>
         </tr>
     </thead>
     <tbody class="units">
@@ -107,11 +122,11 @@ $timer += 1;
                   $end = ($tribe*10);
                   echo "<tr><th>&nbsp;</th>";
                   for($i=$start;$i<=($end);$i++) {
-                      echo "<td><img src=\"img/x.gif\" class=\"unit u$i\" title=\"".$technology->getUnitName($i)."\" alt=\"".$technology->getUnitName($i)."\" /></td>";    
+                      echo "<td><img src=\"img/x.gif\" class=\"unit u$i\" title=\"".$technology->getUnitName($i)."\" alt=\"".$technology->getUnitName($i)."\" /></td>";
                   }
             ?>
             </tr>
- <tr><th>Troops</th>
+ <tr><th><?php echo TROOPS;?></th>
             <?php
 			for($x=1;$x<=9;$x++) {
 			$units[$y]['t'.$x]=0;
@@ -130,16 +145,16 @@ $timer += 1;
            </tr></tbody>
         <tbody class="infos">
             <tr>
-                <th>Arrival</th>
+                <th><?php echo ARRIVAL;?></th>
                 <td colspan="<?php if($units[$y]['t11'] == 0) {echo"10";}else{echo"11";}?>">
                 <?php
-                    echo "<div class=\"in small\"><span id=timer$timer>".$generator->getTimeFormat($settlers[$y]['endtime']-time())."</span> h</div>";
+                echo "<div class=\"in small\"><span id=timer$session->timer>".$generator->getTimeFormat($settlers[$y]['endtime']-time())."</span> h</div>";
                     $datetime = $generator->procMtime($settlers[$y]['endtime']);
                     echo "<div class=\"at small\">";
                     if($datetime[0] != "today") {
-                    echo "on ".$datetime[0]." ";
+                    echo "".ON." ".$datetime[0]." ";
                     }
-                    echo "at ".$datetime[1]."</div>";
+                    echo "".AT." ".$datetime[1]."</div>";
 					if (($settlers[$y]['starttime']+90)>time()){
 				?>
                     <div class="abort"><a href="build.php?id=<?php echo $_GET['id']."&mode=troops&cancel=1&moveid=".$settlers[$y]['moveid']; ?>"><img src="img/x.gif" class="del" /></a></div>

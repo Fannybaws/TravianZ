@@ -12,34 +12,34 @@
 		<tr>
 			<?php
 				$tribe = $user['tribe'];
-				if($tribe ==1){ $img = ""; }
-				if($tribe ==2){ $img = "1";}
-				if($tribe ==3){ $img = "2";}
-				for($i=1; $i<9; $i++)
-				{
-					echo '<td><center><img src="../img/un/u/'.$img.''.$i.'.gif"></center></td>';
-				}
-				for($i=1; $i<9; $i++)
-				{
-					echo '<td><center><img src="../img/un/u/'.$img.''.$i.'.gif"></center></td>';
-				}
+				$img = $tribe == 1 ? "" : $tribe - 1;
+				
+				for($i = 1; $i < 9; $i++) echo '<td><center><img src="../img/un/u/'.$img.''.$i.'.gif"></center></td>';
+				for($i = 1; $i < 9; $i++) echo '<td><center><img src="../img/un/u/'.$img.''.$i.'.gif"></center></td>';
 			?>
 		</tr>
 	</tbody>
 	<tfoot>
 		<tr>
 			<?php
-				##A
-				for($i=1; $i<9; $i++)
-				{
-					echo '<td><center>'.$aupgrades['$i.'].'</center></td>';
-				} ##B
-				for($i=1; $i<9; $i++)
-				{
-					echo '<td><center>'.$bupgrades['$i'].'</center></td>';
+				//Armoury
+				for($i = 1; $i < 9; $i++){
+					if($tribe==5) { $abtech['a'.$i]="<font color=\"grey\">?</font>"; $abtech['b'.$i]="<font color=\"grey\">?</font>";}
+					echo '<td><center>'.$abtech['a'.$i].'</center></td>';
 				}
+				
+				//Blacksmith
+				for($i = 1; $i < 9; $i++) echo '<td><center>'.$abtech['b'.$i].'</center></td>';
 			?>
 		</tr>
 	</tfoot>
 </table>
-<a href="#">Edit Troop Upgrades</a>
+	<?php
+	
+	if($tribe == 5) echo '<span class="none">Upgrades Troops</span>';
+	else echo '<a href="admin.php?p=addABTroops&did='.$_GET['did'].'">Upgrades Troops</a><a href="admin.php?p=techlog&did='.$_GET['did'].'" style="float: right">Research Log</a>';
+
+	if(isset($_GET['ab'])) echo '<div align="right"><font color="Red"><b>AB Tech Troops upgrades</font></b></div>';
+	?>
+	
+	

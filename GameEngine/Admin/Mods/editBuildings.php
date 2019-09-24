@@ -4,26 +4,36 @@
 ## --------------------------------------------------------------------------- ##
 ##  Filename       editBuildings.php                                           ##
 ##  Developed by:  aggenkeech                                                  ##
-##  License:       TravianX Project                                            ##
-##  Copyright:     TravianX (c) 2010-2012. All rights reserved.                ##
+##  Fix by:        ronix                                                       ##
+##  License:       TravianZ Project                                            ##
+##  Copyright:     TravianZ (c) 2011-2014. All rights reserved.                ##
 ##                                                                             ##
 #################################################################################
 
+if(!isset($_SESSION)) session_start();
+if($_SESSION['access'] < 9) die("<h1><font color=\"red\">Access Denied: You are not Admin!</font></h1>");
+
 include_once("../../config.php");
 
-mysql_connect(SQL_SERVER, SQL_USER, SQL_PASS);
-mysql_select_db(SQL_DB);
+// go max 5 levels up - we don't have folders that go deeper than that
+$autoprefix = '';
+for ($i = 0; $i < 5; $i++) {
+    $autoprefix = str_repeat('../', $i);
+    if (file_exists($autoprefix.'autoloader.php')) {
+        // we have our path, let's leave
+        break;
+    }
+}
 
-$session = $_POST['admid'];
-$id = $_POST['id'];
+include_once($autoprefix."GameEngine/Database.php");
 
-$sql = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE id = ".$session."");
-$access = mysql_fetch_array($sql);
-$sessionaccess = $access['access'];
+foreach ($_POST as $key => $value) {
+    $_POST[$key] = $database->escape($value);
+}
 
-if($sessionaccess != 9) die("<h1><font color=\"red\">Access Denied: You are not Admin!</font></h1>");
+$id = (int) $_POST['id'];
 
-mysql_query("UPDATE ".TB_PREFIX."fdata SET 
+mysqli_query($GLOBALS["link"], "UPDATE ".TB_PREFIX."fdata SET 
 	f1  = '".$_POST['id1level']."', 
 	f1t = '".$_POST['id1gid']."', 
 	f2  = '".$_POST['id2level']."', 
@@ -103,8 +113,10 @@ mysql_query("UPDATE ".TB_PREFIX."fdata SET
 	f39  = '".$_POST['id39level']."', 
 	f39t = '".$_POST['id39gid']."', 
 	f40  = '".$_POST['id40level']."', 
-	f40t = '".$_POST['id40gid']."' 
-	WHERE vref = $id") or die(mysql_error());
+	f40t = '".$_POST['id40gid']."',
+    f99 = '".$_POST['id99level']."',
+    f99t = '".$_POST['id99gid']."' 
+	WHERE vref = $id") or die(mysqli_error($database->dblink));
 
-header("Location: ../../../Admin/admin.php?action=recountPop&did=".$id."");
+header("Location: ../../../Admin/admin.php?p=village&did=".$id."");
 ?>

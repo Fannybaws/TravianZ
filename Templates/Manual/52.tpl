@@ -1,13 +1,22 @@
 <?php
 $count="0";
-include("GameEngine/Config.php");
+include_once("GameEngine/Config.php");
 
-		$connection = mysql_connect(SQL_SERVER, SQL_USER, SQL_PASS) or die(mysql_error());
-		mysql_select_db(SQL_DB, $connection) or die(mysql_error());
+// go max 5 levels up - we don't have folders that go deeper than that
+$autoprefix = '';
+for ($i = 0; $i < 5; $i++) {
+    $autoprefix = str_repeat('../', $i);
+    if (file_exists($autoprefix.'autoloader.php')) {
+        // we have our path, let's leave
+        break;
+    }
+}
 
-		$q = "SELECT * FROM ".TB_PREFIX."movement where endtime < ".time()." and proc = 0";
-		$result = mysql_query($q, $connection);
-		$count=mysql_num_rows($result);
+include_once($autoprefix."GameEngine/Database.php");
+
+$q = "SELECT Count(*) as Total FROM ".TB_PREFIX."movement where endtime < ".time()." and proc = 0";
+$result = mysqli_fetch_array(mysqli_query($GLOBALS["link"], $q), MYSQLI_ASSOC);
+$count=$result['Total'];
 
 ?>
 
@@ -20,12 +29,11 @@ As soon as more events are received per second than can be calculated per second
 <br />
 The chronological order of troop movements stays the same, even in an event jam, so troops that would normally arrive somewhere first would still arrive there first.
 <br />
-
-As player, nothing can be done against an event jam except waiting. Normally these problems get resolved after a few minutes automatically. At the moment <b><?php echo $count; ?></b> events await </p>
-
+As player, nothing can be done against an event jam except waiting. Normally these problems get resolved after a few minutes automatically. At the moment <b><?php echo $count; ?></b> events await
+</p>
 <map id="nav" name="nav">
- <area href="manual.php?s=1" title="back" coords="0,0,45,18" shape="rect" alt="" />
- <area href="manual.php?s=1" title="Overview" coords="46,0,70,18" shape="rect" alt="" />
- <area href="manual.php?s=1" title="forward" coords="71,0,116,18" shape="rect" alt="" />
+    <area href="manual.php?s=1" title="back" coords="0,0,45,18" shape="rect" alt="" />
+    <area href="manual.php?s=1" title="Overview" coords="46,0,70,18" shape="rect" alt="" />
+    <area href="manual.php?s=1" title="forward" coords="71,0,116,18" shape="rect" alt="" />
 </map>
 <img usemap="#nav" src="img/x.gif" class="navi" alt="" />

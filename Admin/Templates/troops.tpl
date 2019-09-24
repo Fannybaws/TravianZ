@@ -108,7 +108,7 @@
 					else if($units['u49'] > 0){$u49 = '<font color="black">'.$units['u49'].'';}
 					if($units['u50'] == 0){$u50 = '<font color="gray">'.$units['u50'].'';}
 					else if($units['u50'] > 0){$u50 = '<font color="black">'.$units['u50'].'';}
-					if($_SESSION['access'] == ADMIN)
+					if($_SESSION['access'] >= MULTIHUNTER)
 					{
 						if($user['tribe'] == 1)
 						{
@@ -271,6 +271,8 @@
 		if($_SESSION['access'] == ADMIN)
 		{
 			echo '<a href="admin.php?p=addTroops&did='.$_GET['did'].'">Edit Troops</a>';
+			if(isset($_GET['d'])){
+				echo '<div align="right"><font color="Red"><b>Troops edited</font></b></div>';
+			}	
 		}
-
 	?>

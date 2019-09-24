@@ -16,6 +16,7 @@
 //////////////////////////////////
 // (E_ALL ^ E_NOTICE) = enabled
 // (0) = disabled
+define("ERROR_REPORT","%ERRORREPORT%");
 %ERROR%
 
 //////////////////////////////////
@@ -53,7 +54,7 @@ define("SPEED", "%SPEED%");
 define("WORLD_MAX", "%MAX%");
 
 // ***** Graphic Pack
-// True = enabled, false = disabled
+// true = enabled, false = disabled
 //!!!!!!!!!!!! DO NOT ENABLE !!!!!!!!!!!!
 define("GP_ENABLE",false);
 // Graphic pack location (default: gpack/travian_default/)
@@ -94,6 +95,9 @@ define("STORAGE_BASE",800*STORAGE_MULTIPLIER);
 // ***** Quest
 // Ingame quest enabled/disabled.
 define("QUEST",%QUEST%);
+//quest type : 25 = Travian Official 
+//             37 = TravianZ Extended 
+define("QTYPE",%QTYPE%);
 
 // ***** Beginners Protection
 // 3600 = 1 hour
@@ -112,8 +116,23 @@ define("SHOW_NATARS",%SHOW_NATARS%);
 // ***** Natars Units Multiplier
 define("NATARS_UNITS",%NATARS_UNITS%); 
 
+// ***** Natars Spawn Time
+define("NATARS_SPAWN_TIME",%NATARS_SPAWN_TIME%); 
+define("NATARS_WW_SPAWN_TIME",%NATARS_WW_SPAWN_TIME%); 
+define("NATARS_WW_BUILDING_PLAN_SPAWN_TIME",%NATARS_WW_BUILDING_PLAN_SPAWN_TIME%); 
+
 // ***** Nature troops regeneration time
 define("NATURE_REGTIME",%NATURE_REGTIME%); 
+
+// ***** Oasis production
+define("OASIS_WOOD_MULTIPLIER",%OASIS_WOOD_MULTIPLIER%); 
+define("OASIS_CLAY_MULTIPLIER",%OASIS_CLAY_MULTIPLIER%); 
+define("OASIS_IRON_MULTIPLIER",%OASIS_IRON_MULTIPLIER%); 
+define("OASIS_CROP_MULTIPLIER",%OASIS_CROP_MULTIPLIER%); 
+define("OASIS_WOOD_PRODUCTION",OASIS_WOOD_MULTIPLIER*SPEED);
+define("OASIS_CLAY_PRODUCTION",OASIS_CLAY_MULTIPLIER*SPEED);
+define("OASIS_IRON_PRODUCTION",OASIS_IRON_MULTIPLIER*SPEED);
+define("OASIS_CROP_PRODUCTION",OASIS_CROP_MULTIPLIER*SPEED); 
 
 // ***** Enable T4 is Coming screen
 define("T4_COMING",%T4_COMING%);
@@ -125,6 +144,30 @@ define("T4_COMING",%T4_COMING%);
 define("AUTH_EMAIL",%ACTIVATE%);
 
 // ***** PLUS
+//Plus PayPal e-mail address
+define("PAYPAL_EMAIL","%PAYPAL_EMAIL%");
+//Plus PayPal currency
+define("PAYPAL_CURRENCY","%PAYPAL_CURRENCY%");
+//Plus Package A Price
+define("PLUS_PACKAGE_A_PRICE","%PLUS_PACKAGE_A_PRICE%");
+//Plus Package A Gold
+define("PLUS_PACKAGE_A_GOLD","%PLUS_PACKAGE_A_GOLD%");
+//Plus Package B Price
+define("PLUS_PACKAGE_B_PRICE","%PLUS_PACKAGE_B_PRICE%");
+//Plus Package B Gold
+define("PLUS_PACKAGE_B_GOLD","%PLUS_PACKAGE_B_GOLD%");
+//Plus Package C Price
+define("PLUS_PACKAGE_C_PRICE","%PLUS_PACKAGE_C_PRICE%");
+//Plus Package C Gold
+define("PLUS_PACKAGE_C_GOLD","%PLUS_PACKAGE_C_GOLD%");
+//Plus Package D Gold
+define("PLUS_PACKAGE_D_GOLD","%PLUS_PACKAGE_D_GOLD%");
+//Plus Package D Price
+define("PLUS_PACKAGE_D_PRICE","%PLUS_PACKAGE_D_PRICE%");
+//Plus Package E Price
+define("PLUS_PACKAGE_E_PRICE","%PLUS_PACKAGE_E_PRICE%");
+//Plus Package E Gold
+define("PLUS_PACKAGE_E_GOLD","%PLUS_PACKAGE_E_GOLD%");
 //Plus account lenght
 define("PLUS_TIME",%PLUS_TIME%);
 //+25% production lenght
@@ -185,10 +228,14 @@ define("NEWSBOX3",%BOX3%);
 //////////////////////////////////
 
 // ***** SQL Hostname
-// example. sql106.000space.com / localhost
+// example: sql106.000space.com / localhost
 // If you host server on own PC than this value is: localhost
 // If you use online hosting, value must be written in host cpanel
 define("SQL_SERVER", "%SSERVER%");
+
+// ***** SQL Port
+// default: 3306
+define("SQL_PORT", %SPORT%);
 
 // ***** Database Username
 define("SQL_USER", "%SUSER%");
@@ -243,13 +290,42 @@ define("ADMIN_EMAIL", "%AEMAIL%");
 // ***** Admin Name
 define("ADMIN_NAME", "%ANAME%");
 
+// ***** Show Support Messages in Admin
+define("ADMIN_RECEIVE_SUPPORT_MESSAGES", %ASUPPMSGS%);
+
+// ***** Allow Admin accounts to be raided and attacked
+define("ADMIN_ALLOW_INCOMING_RAIDS", %ARAIDS%);
+
+
+/////////////////////////////////////////////////
+//   ****  NEW MECHANICS AND FUNCTIONS  ****   //
+/////////////////////////////////////////////////
+define("NEW_FUNCTIONS_OASIS", %NEW_FUNCTIONS_OASIS%);
+define("NEW_FUNCTIONS_ALLIANCE_INVITATION", %NEW_FUNCTIONS_ALLIANCE_INVITATION%);
+define("NEW_FUNCTIONS_EMBASSY_MECHANICS", %NEW_FUNCTIONS_EMBASSY_MECHANICS%);
+define("NEW_FUNCTIONS_FORUM_POST_MESSAGE", %NEW_FUNCTIONS_FORUM_POST_MESSAGE%);
+define("NEW_FUNCTIONS_TRIBE_IMAGES", %NEW_FUNCTIONS_TRIBE_IMAGES%);
+define("NEW_FUNCTIONS_MHS_IMAGES", %NEW_FUNCTIONS_MHS_IMAGES%);
+define("NEW_FUNCTIONS_DISPLAY_ARTIFACT", %NEW_FUNCTIONS_DISPLAY_ARTIFACT%);
+define("NEW_FUNCTIONS_DISPLAY_WONDER", %NEW_FUNCTIONS_DISPLAY_WONDER%);
+define("NEW_FUNCTIONS_VACATION", %NEW_FUNCTIONS_VACATION%);
+define("NEW_FUNCTIONS_DISPLAY_CATAPULT_TARGET", %NEW_FUNCTIONS_DISPLAY_CATAPULT_TARGET%);
+define("NEW_FUNCTIONS_MANUAL_NATURENATARS", %NEW_FUNCTIONS_MANUAL_NATURENATARS%);
+define("NEW_FUNCTIONS_DISPLAY_LINKS", %NEW_FUNCTIONS_DISPLAY_LINKS%);
+define("NEW_FUNCTIONS_MEDAL_3YEAR", %NEW_FUNCTIONS_MEDAL_3YEAR%);
+define("NEW_FUNCTIONS_MEDAL_5YEAR", %NEW_FUNCTIONS_MEDAL_5YEAR%);
+define("NEW_FUNCTIONS_MEDAL_10YEAR", %NEW_FUNCTIONS_MEDAL_10YEAR%);
 
 
 //////////////////////////////////////////
 //   ****  DO NOT EDIT SETTINGS  ****   //
 //////////////////////////////////////////
-define("TRACK_USR","%UTRACK%");
-define("USER_TIMEOUT","%UTOUT%"); 
+define("AUTO_DEL_INACTIVE",false); // auto-delete inactive players; default = false
+define("UN_ACT_TIME", 3628800); // 6 weeks to consider a player inactive
+//define("TRACK_USR","%UTRACK%");
+//define("USER_TIMEOUT","%UTOUT%");
+define("TRACK_USR",true); // track users' being active or not
+define("USER_TIMEOUT",3600); // 1 hour of no activity counts as inactivity
 define("ALLOW_BURST",false);
 define("BASIC_MAX",1);
 define("INNER_MAX",1);
@@ -267,6 +343,10 @@ define("MULTIHUNTER",8);
 define("ADMIN",9);
 define("COOKIE_EXPIRE", 60*60*24*7); 
 define("COOKIE_PATH", "/"); 
+define("LOG_PAGE_ACCESS", false);
+define("PAGE_ACCESS_LOG_DATE", true);
+define("PAGE_ACCESS_LOG_IP", true);
+define("PAGE_ACCESS_LOG_FILENAME", 'access.log'); // filename ONLY, no path!
 
 
 ////////////////////////////////////////////

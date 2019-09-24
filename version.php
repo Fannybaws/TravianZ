@@ -1,4 +1,6 @@
 <?php
+include_once("GameEngine/Generator.php");
+$start_timer = $generator->pageLoadTimeStart();
 
 #################################################################################
 ##              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 ##
@@ -10,34 +12,35 @@
 ##                                                                             ##
 #################################################################################
 
+use App\Utils\AccessLogger;
 
-include("GameEngine/Village.php");
+include_once("GameEngine/Village.php");
+AccessLogger::logRequest();
+
 $amount = $_SESSION['amount'];
-$start = $generator->pageLoadTimeStart();
 if(isset($_GET['newdid'])) {
 	$_SESSION['wid'] = $_GET['newdid'];
 	header("Location: ".$_SERVER['PHP_SELF']);
+	exit;
 }
-else {
-	$building->procBuild($_GET);
-}
-$automation->isWinner();
+else $building->procBuild($_GET);
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-	<title><?php echo SERVER_NAME ?></title>
-	<link REL="shortcut icon" HREF="favicon.ico"/>
+	<title><?php echo SERVER_NAME ?> - Game Version</title>
+	<link rel="shortcut icon" href="favicon.ico"/>
 	<meta http-equiv="cache-control" content="max-age=0" />
 	<meta http-equiv="pragma" content="no-cache" />
 	<meta http-equiv="expires" content="0" />
 	<meta http-equiv="imagetoolbar" content="no" />
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<script src="mt-full.js?0faaa" type="text/javascript"></script>
-	<script src="unx.js?0faaa" type="text/javascript"></script>
-	<script src="new.js?0faaa" type="text/javascript"></script>
-	<link href="<?php echo GP_LOCATE; ?>lang/en/lang.css?f4b7c" rel="stylesheet" type="text/css" />
-	<link href="<?php echo GP_LOCATE; ?>lang/en/compact.css?f4b7c" rel="stylesheet" type="text/css" />
+	<script src="mt-full.js?0faab" type="text/javascript"></script>
+	<script src="unx.js?f4b7h" type="text/javascript"></script>
+	<script src="new.js?0faab" type="text/javascript"></script>
+	<link href="<?php echo GP_LOCATE; ?>lang/en/lang.css?f4b7d" rel="stylesheet" type="text/css" />
+	<link href="<?php echo GP_LOCATE; ?>lang/en/compact.css?f4b7i" rel="stylesheet" type="text/css" />
 	<?php
 	if($session->gpack == null || GP_ENABLE == false) {
 	echo "
@@ -63,46 +66,57 @@ $automation->isWinner();
 <div id="mid">
 <?php include("Templates/menu.tpl"); ?>
 <?php include("Templates/version.tpl"); ?>
-<div id="products">
-1. Advocaite</br>
-2. Dzoki</br>
-3. Shadow</br>
-4. NarcisRO</br>
-5. yi12345</br>
-6. ronix</br>
-7. brainiacX</br>
-8. Niko28</br>
-9. akshay9</br>
-10. KFCSpike</br>
-11. nean</br>
-12. hexcoded</br>
-13. SlimZ</br>
-14. inblackhole</br>
-15. elio</br>
-16. AL3XAND3R or MisterX</br>
-17. Mr.php</br>
-18. Akakori</br>
-19. G3n3s!s</br>
-20. JimJam</br>
-21. LoppyLukas</br>
-22. Dixie</br>
-23. ZZJHONS</br>
-24. songeriux</br>
-25. TTMMTT</br>
-26. Donnchadh</br>
-27. DesPlus</br>
-28. Marvin</br>
-29. noonn</br>
-30. Armando</br>
-31. aggenkeech</br>
+<div id="products"><b>
+1. ronix - For coding above and beyond the call of duty<br />
+2. Dzoki - Version starter<br />
+3. Shadow - For coding above and beyond the call of duty<br />
+4. Advocaite - For coding above and beyond the call of duty<br />
+5. yi12345 - It's always a pleasure<br />
+6. NarcisRO - bug hunter<br />
+7. brainiacX - For being able to code, when we needed code the most<br />
+8. InCube<br />
+9. akshay9<br />
+10. KFCSpike<br />
+11. nean<br />
+12. hexcoded<br />
+13. SlimZ<br />
+14. inblackhole<br />
+15. elio - Your advise is always welcome<br />
+16. AL3XAND3R or MisterX - For keeping the faith<br />
+17. Mr.php<br />
+18. Akakori<br />
+19. G3n3s!s<br />
+20. JimJam<br />
+21. LoppyLukas<br />
+22. Dixie<br />
+23. ZZJHONS<br />
+24. songeriux<br />
+25. TTMMTT<br />
+26. Donnchadh<br />
+27. DesPlus<br />
+28. Marvin<br />
+29. noonn<br />
+30. Armando<br />
+31. aggenkeech<br />
+32. Niko28<br />
+33. martinambrus - alumni developer<br />
+34. iopietro - lead developer<br />
+35. Vladyslav - rigorous game tester<br />
+36. AL-Kateb - developer</b></div><br />
+<div style="text-align: center"><b><u>Released by: TravianZ Team</u></b><br /><br />
+<b>Visit: <a href="http://forum.ragezone.com/f583/travianz-version-modified-shadow-many-967580/">RageZone.com</a></b></div><br />
+<div style="text-align: center"><b>Download from <u><a href="https://github.com/Shadowss/TravianZ/archive/master.zip">Github</a></u></b><br />
 </div>
 </div>
-</br></br></br></br><div id="side_info">
+<br /><br /><br /><br /><div id="side_info">
 <?php
 include("Templates/multivillage.tpl");
 include("Templates/quest.tpl");
 include("Templates/news.tpl");
-include("Templates/links.tpl");
+if(!NEW_FUNCTIONS_DISPLAY_LINKS) {
+	echo "<br><br><br><br>";
+	include("Templates/links.tpl");
+}
 ?>
 </div>
 <div class="clear"></div>
@@ -117,11 +131,11 @@ include("Templates/res.tpl");
 <div id="stime">
 <div id="ltime">
 <div id="ltimeWrap">
-Calculated in <b><?php
-echo round(($generator->pageLoadTimeEnd()-$start)*1000);
+<?php echo CALCULATED_IN;?> <b><?php
+echo round(($generator->pageLoadTimeEnd()-$start_timer)*1000);
 ?></b> ms
 
-<br />Server time: <span id="tp1" class="b"><?php echo date('H:i:s'); ?></span>
+<br /><?php echo SEVER_TIME;?> <span id="tp1" class="b"><?php echo date('H:i:s'); ?></span>
 </div>
 	</div>
 </div>

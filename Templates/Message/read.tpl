@@ -17,7 +17,19 @@ include("menu.tpl");
 <div id="read_content" class="msg_content">
 	<img src="img/x.gif" id="label" class="read" alt="" />
 	<div id="heading">
-		<div><?php echo $database->getUserField($message->reading['owner'],"username",0); ?></div>
+		<div><?php
+			$linkSender = ($message->reading['owner'] != 2 && $message->reading['owner'] != 4);
+			if ($linkSender) {
+				echo '<a href="'.rtrim(SERVER, '/')."/spieler.php?uid=".$message->reading['owner']."\">";
+			}
+			
+			echo $database->getUserField($message->reading['owner'],"username",0);
+			
+			if ($linkSender) {
+				echo '</a>';
+			}
+			?>
+		</div>
 		<div><?php echo $message->reading['topic']; ?></div>
 	</div>
 	<div id="time">
@@ -31,7 +43,7 @@ include("menu.tpl");
     <input type="hidden" name="ft" value="m1" />
 	<input type="hidden" name="t" value="1" />
 	<p class="btn">
-		<input type="image" value="" name="s1" id="btn_reply" class="dynamic_img" src="img/x.gif" alt="answer" />
+		<button value="" name="s1" id="btn_reply" class="trav_buttons">Answer</button>
 	</p>
 </div>
 <div id="read_foot" class="msg_foot"></div>

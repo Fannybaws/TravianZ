@@ -26,7 +26,7 @@
 			<tr>
 				<td>User ID</td>
 				<td>
-					<input type="text" class="fm" name="uid" value="<?php echo $_GET['uid'];?>">
+					<input type="text" class="fm" name="uid" value="<?php echo (isset($_GET['uid']) ? $_GET['uid'] : '');?>">
 				</td>
 			</tr>
 			<tr>
@@ -115,7 +115,7 @@ $bannedUsers = $admin->search_banned();
 						<td>'.$link.'</td>
 						<td ><span class="f7">'.date("d.m.y H:i",$bannedUsers[$i]['time']).' - '.$end.'</td>
 						<td>'.$bannedUsers[$i]['reason'].'</td>
-						<td class="on"><a href="?action=delBan&uid='.$bannedUsers[$i]['uid'].'&id='.$bannedUsers[$i]['id'].'" onClick="return del(\'unban\',\''.$name.'\')"><img src="../img/Admin/del.gif" class="del" title="cancel" alt="cancel"></img></a></td>
+						<td class="on"><a href="?action=delBan&uid='.$bannedUsers[$i]['uid'].'&id='.$bannedUsers[$i]['id'].'" onClick="return del(\'unban\',\''.$name.'\')"><img src="../img/admin/del.gif" class="del" title="cancel" alt="cancel"></img></a></td>
 					</tr>';
 				}
 			}

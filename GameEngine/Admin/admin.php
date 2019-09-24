@@ -1,4 +1,22 @@
-<?php###################################################################################              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 #### --------------------------------------------------------------------------- ####  Filename       admin.php                                                   ####  Developed by:  Dzoki                                                       ####  License:       TravianX Project                                            ####  Copyright:     TravianX (c) 2010-2011. All rights reserved.                ####                                                                             ###################################################################################
+<?php
+#################################################################################
+##                                                                             ##
+##              -= YOU MUST NOT REMOVE OR CHANGE THIS NOTICE =-                ##
+##                                                                             ##
+## --------------------------------------------------------------------------- ##
+##                                                                             ##
+##  Project:       TravianZ                                                    ##
+##  Version:       05.03.2014                                                  ##
+##  Filename:      Admin/admin.php     				                           ##
+##  Developed by:  Dzoki                                                       ##
+##  Edited by:     Shadow and ronix                                            ##
+##  License:       Creative Commons BY-NC-SA 3.0                               ##
+##  Copyright:     TravianZ (c) 2014 - All rights reserved                     ##
+##  URLs:          http://travian.shadowss/ro                                  ##
+##  Source code:   https://github.com/Shadowss/TravianZ	                       ##
+##                                                                             ##
+#################################################################################
+
 session_start();
 include("../GameEngine/Database.php");
 include("../GameEngine/Admin/database.php");
@@ -6,8 +24,8 @@ include("../GameEngine/Admin/database.php");
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <link REL="shortcut icon" HREF="favicon.ico"/>
-	<title>Admin Control Panel - TravianX</title>
+  <link rel="shortcut icon" href="favicon.ico"/>
+	<title>Admin Control Panel - TravianZ</title>
 	<link rel=stylesheet type="text/css" href="../img/admin/admin.css">
 	<link rel=stylesheet type="text/css" href="../img/admin/acp.css">
 	<link rel=stylesheet type="text/css" href="../img/../img.css">
@@ -24,10 +42,11 @@ function aktiv() {this.srcElement.className='fl1'; }
 function inaktiv() {event.srcElement.className='fl2'; }
 
 function del(e,id){
-if(e == 'did'){ var conf = confirm('Dou you really want delete village id '+id+'?'); }
-if(e == 'unban'){ var conf = confirm('Dou you really want unban player '+id+'?'); }
-if(e == 'stopDel'){ var conf = confirm('Dou you really want stop deleting user '+id+'?'); }
-if(conf){return true;}else{return false;}
+if(e == 'did'){ var conf = confirm('Do you really want to delete village id '+id+'?'); }
+if(e == 'arti'){ var conf = confirm('Do you really want to delete artifact id '+id+'?'); }
+if(e == 'unban'){ var conf = confirm('Do you really want to unban player '+id+'?'); }
+if(e == 'stopDel'){ var conf = confirm('Do you really want to stop deleting user '+id+'?'); }
+return conf;
 }
 
 </script>
@@ -67,30 +86,22 @@ if(conf){return true;}else{return false;}
 
   if($funct->CheckLogin()){
 	if($_POST or $_GET){
-	  if($_GET['p'] and $_GET['p']!="search"){
+	  if($_GET['p'] && $_GET['p'] != "search"){
 		  $filename = '../Templates/Admin/'.$_GET['p'].'.tpl';
-		  if(file_exists($filename)){
-			include($filename);
-		  }else{
-			include('../Templates/Admin/404.tpl');
-		  }
-	  }else{
-		include('../Templates/Admin/search.tpl');
+		  if(file_exists($filename)) include($filename);
+		  else include('../Templates/Admin/404.tpl');
 	  }
-	  if($_POST['p'] and $_POST['s']){
+	  else include('../Templates/Admin/search.tpl');
+	  
+	  if($_POST['p'] && $_POST['s']){
 		$filename = '../Templates/Admin/results_'.$_POST['p'].'.tpl';
-		  if(file_exists($filename)){
-			include($filename);
-		  }else{
-			include('../Templates/Admin/404.tpl');
-		  }
+		if(file_exists($filename)) include($filename);
+		else include('../Templates/Admin/404.tpl');
 	  }
-	}else{
-	  include('../Templates/Admin/home.tpl');
 	}
-  }else{
-	include('../Templates/Admin/login.tpl');
+	else include('../Templates/Admin/home.tpl');
   }
+  else include('../Templates/Admin/login.tpl');
 ?>
 
 </div>
@@ -100,7 +111,7 @@ if(conf){return true;}else{return false;}
 <div id="lright1"></div>
 
 <div id="ce"></div>
-
+</div>
 
 
 </body>

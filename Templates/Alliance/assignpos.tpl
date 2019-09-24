@@ -1,16 +1,11 @@
 <?php
-if(isset($aid)) {
-$aid = $aid;
-}
-else {
-$aid = $session->alliance;
-}
+if(!isset($aid)) $aid = $session->alliance;
+
 $allianceinfo = $database->getAlliance($aid);
 $memberlist = $database->getAllMember($aid);
 
 echo "<h1>".$allianceinfo['tag']." - ".$allianceinfo['name']."</h1>";
-include("alli_menu.tpl"); 
-if($session->access!=BANNED){
+include("alli_menu.tpl");
 ?>
 			<form method="post" action="allianz.php">
 				<table cellpadding="1" cellspacing="1" id="position" class="small_option">
@@ -28,8 +23,10 @@ if($session->access!=BANNED){
 							<td>
 								<select name="a_user" class="name dropdown">
 								<?php
-                                foreach($memberlist as $member) {
-                                echo "<option value=".$member['id'].">".$member['username']."</option>";
+                                foreach($memberlist as $member){
+                                    if($member['id'] != $session->uid && !$database->isAllianceOwner($member['id'])){
+                                        echo "<option value=".$member['id'].">".$member['username']."</option>";
+                                    }
                                 }
                                 ?>
                                 </select>
@@ -40,12 +37,6 @@ if($session->access!=BANNED){
 				<p>
 					<input type="hidden" name="o" value="1">
 					<input type="hidden" name="s" value="5">
-					<input type="image" value="ok" name="s1" id="btn_ok" class="dynamic_img" src="img/x.gif" alt="OK" />
+					<button value="ok" name="s1" id="btn_ok" class="trav_buttons">OK</button>
 				</p>
 			</form>
-			<p class="error"></p>
-<?php
-}else{
-	header("Location: banned.php");
-}
-?>

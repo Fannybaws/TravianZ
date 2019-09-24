@@ -1,4 +1,6 @@
 <?php
+include_once("GameEngine/Generator.php");
+$start_timer = $generator->pageLoadTimeStart();
 
 #################################################################################
 ##              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 ##
@@ -10,26 +12,28 @@
 ##                                                                             ##
 #################################################################################
 
+use App\Utils\AccessLogger;
 
-include("GameEngine/Village.php");
-$start = $generator->pageLoadTimeStart();
+include_once("GameEngine/Village.php");
+AccessLogger::logRequest();
+
 $battle->procSim($_POST);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-	<title><?php echo SERVER_NAME ?></title>
-	<link REL="shortcut icon" HREF="favicon.ico"/>
+	<title><?php echo SERVER_NAME ?> - Combat Simulator</title>
+	<link rel="shortcut icon" href="favicon.ico"/>
 	<meta http-equiv="cache-control" content="max-age=0" />
 	<meta http-equiv="pragma" content="no-cache" />
 	<meta http-equiv="expires" content="0" />
 	<meta http-equiv="imagetoolbar" content="no" />
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<script src="mt-full.js?0faaa" type="text/javascript"></script>
-	<script src="unx.js?0faaa" type="text/javascript"></script>
-	<script src="new.js?0faaa" type="text/javascript"></script>
-	<link href="<?php echo GP_LOCATE; ?>lang/en/lang.css?f4b7c" rel="stylesheet" type="text/css" />
-	<link href="<?php echo GP_LOCATE; ?>lang/en/compact.css?f4b7c" rel="stylesheet" type="text/css" />
+	<script src="mt-full.js?0faab" type="text/javascript"></script>
+	<script src="unx.js?f4b7h" type="text/javascript"></script>
+	<script src="new.js?0faab" type="text/javascript"></script>
+	<link href="<?php echo GP_LOCATE; ?>lang/en/lang.css?f4b7d" rel="stylesheet" type="text/css" />
+	<link href="<?php echo GP_LOCATE; ?>lang/en/compact.css?f4b7i" rel="stylesheet" type="text/css" />
 	<?php
 	if($session->gpack == null || GP_ENABLE == false) {
 	echo "
@@ -68,40 +72,51 @@ if(isset($_POST['result'])) {
         include("Templates/Simulator/res_d".$tar.".tpl");
     }
     echo "<p>Type of attack: <b>";
-    echo $form->getValue('ktyp') == 0? "Normal" : "Raid";
+    echo $form->getValue('ktyp') == 0 ? "Normal" : "Raid";
     echo "</b></p>";
     echo "<p>";
-    if (isset($_POST['result'][7])&&isset($_POST['result'][8])){
+    if (isset($_POST['result'][7]) && isset($_POST['result'][8])){
         if ($form->getValue('ktyp') == 1) {
             echo "Hint: The ram does not work during a raid.<br>";
-        }elseif ($_POST['result'][8]>$_POST['result'][7]){
+        }elseif ($_POST['result'][7] == 0){
             echo "Damage done by ram: from level <b>".$form->getValue('walllevel')."</b> to level <b>0</b></p>";
-        }elseif ($_POST['result'][8]==0){
+        }elseif ($_POST['result'][7] == $_POST['result'][8]){
             echo "Damage done by ram: from level <b>".$form->getValue('walllevel')."</b> to level <b>".$form->getValue('walllevel')."</b></p>";
         }else{
-            $demolish_ram=$_POST['result'][8]/$_POST['result'][7];
-            $totallvl = round(sqrt(pow(($form->getValue('walllevel')+0.5),2)-($_POST['result'][8]*8)));
-            echo "Damage done by ram: from level <b>".$form->getValue('walllevel')."</b> to level <b>".$totallvl."</b></p>";
+            echo "Damage done by ram: from level <b>".$form->getValue('walllevel')."</b> to level <b>".$_POST['result'][7]."</b></p>";
         }
     }
-    
-    if (isset($_POST['result'][3])&&isset($_POST['result'][4])){
+
+    if (isset($_POST['result'][3]) && isset($_POST['result'][4])){
         if ($form->getValue('ktyp') == 1) {
             echo "Hint: The catapult does not shoot during a raid.</p>";
-        }elseif ($_POST['result'][4]>$_POST['result'][3]){
+        }elseif ($_POST['result'][3] == 0){
             echo "Damage done by catapult: from level <b>".$form->getValue('kata')."</b> to level <b>0</b></p>";
-        }elseif ($_POST['result'][4]==0){
+        }elseif ($_POST['result'][3] == $_POST['result'][4]){
             echo "Damage done by catapult: from level <b>".$form->getValue('kata')."</b> to level <b>".$form->getValue('kata')."</b></p></p>";
         }else{
-            $demolish=$_POST['result'][4]/$_POST['result'][3];
-            //$Katalife=round($_POST['result'][4]-($_POST['result'][4]*$_POST['result'][1]));
-            //$totallvl = round($form->getValue('kata')-($form->getValue('kata') * $demolish));
-            $totallvl = round(sqrt(pow(($form->getValue('kata')+0.5),2)-($_POST['result'][4]*8)));
-            echo "Damage done by catapult: from level <b>".$form->getValue('kata')."</b> to level <b>".$totallvl."</b></p>";
+            echo "Damage done by catapult: from level <b>".$form->getValue('kata')."</b> to level <b>".$_POST['result'][3]."</b></p>";
         }
-    } 
+    }
 }
-$target = isset($_POST['target'])? $_POST['target'] : array();
+
+if (!empty($_GET['target'])) {
+    // this only works for Nature, as GET links like this one will come from an oasis
+    if (!$_GET['target'] != 4) {
+        $_GET['target'] = 4;
+    }
+
+    // fill-in session value-array data
+    foreach ($_GET as $key => $value) {
+        if ($key[0] === 'u' && is_numeric($value)) {
+            $form->setValue('a2_' . substr($key, 1), $value);
+        }
+    }
+
+
+}
+
+$target = isset($_POST['target'])? $_POST['target'] : (!empty($_GET['target']) ? array((int) $_GET['target']) : array());
 $tribe = isset($_POST['mytribe'])? $_POST['mytribe'] : $session->tribe;
 if(count($target) > 0) {
 	include("Templates/Simulator/att_".preg_replace("/[^a-zA-Z0-9_-]/","",$tribe).".tpl");
@@ -129,33 +144,36 @@ if(count($target) > 0) {
 </tr></thead>
 <tbody><tr>
 	<td>
-		<label><input class="radio" type="radio" name="a1_v" value="1" <?php if($tribe == 1) { echo "checked"; } ?>> Romans</label><br/>
-		<label><input class="radio" type="radio" name="a1_v" value="2" <?php if($tribe == 2) { echo "checked"; } ?>> Teutons</label><br/>
-		<label><input class="radio" type="radio" name="a1_v" value="3" <?php if($tribe == 3) { echo "checked"; } ?>> Gauls</label>
+		<label><input class="radio" type="radio" name="a1_v" value="1" <?php if($tribe == 1) { echo "checked"; } ?>/> Romans</label><br/>
+		<label><input class="radio" type="radio" name="a1_v" value="2" <?php if($tribe == 2) { echo "checked"; } ?>/> Teutons</label><br/>
+		<label><input class="radio" type="radio" name="a1_v" value="3" <?php if($tribe == 3) { echo "checked"; } ?>/> Gauls</label>
 	</td><td>
-		<label><input class="check" type="checkbox" name="a2_v1" value="1" <?php if(in_array(1,$target)) { echo "checked"; } ?>> Romans</label><br/>
+		<label><input class="check" type="checkbox" name="a2_v1" value="1" <?php if(in_array(1,$target)) { echo "checked"; } ?>/> Romans</label><br/>
 
-		<label><input class="check" type="checkbox" name="a2_v2" value="1" <?php if(in_array(2,$target)) { echo "checked"; } ?>> Teutons</label><br/>
-		<label><input class="check" type="checkbox" name="a2_v3" value="1" <?php if(in_array(3,$target)) { echo "checked"; } ?>> Gauls</label><br/>
-		<label><input class="check" type="checkbox" name="a2_v4" value="1" <?php if(in_array(4,$target)) { echo "checked"; } ?>> Nature</label>
+		<label><input class="check" type="checkbox" name="a2_v2" value="1" <?php if(in_array(2,$target)) { echo "checked"; } ?>/> Teutons</label><br/>
+		<label><input class="check" type="checkbox" name="a2_v3" value="1" <?php if(in_array(3,$target)) { echo "checked"; } ?>/> Gauls</label><br/>
+		<label><input class="check" type="checkbox" name="a2_v4" value="1" <?php if(in_array(4,$target)) { echo "checked"; } ?>/> Nature</label>
 		</td><td>
-		<label><input class="radio" type="radio" name="ktyp" value="0" <?php if($form->getValue('ktyp') == 0 || $form->getValue('ktyp') == "") { echo "checked"; } ?>> normal</label><br/>
+		<label><input class="radio" type="radio" name="ktyp" value="0" <?php if($form->getValue('ktyp') == 0 || $form->getValue('ktyp') == "") { echo "checked"; } ?>/> normal</label><br/>
 
-		<label><input class="radio" type="radio" name="ktyp" value="1" <?php if($form->getValue('ktyp') == 1) { echo "checked"; } ?>> raid</label><br/>
-		<label><input type="hidden" name="uid" value="<?php echo $session->uid; ?>"></label>
+		<label><input class="radio" type="radio" name="ktyp" value="1" <?php if($form->getValue('ktyp') == 1) { echo "checked"; } ?>/> raid</label><br/>
+		<label><input type="hidden" name="uid" value="<?php echo $session->uid; ?>" /></label>
 	</td>
 </tr></tbody>
 </table>
 
-<p class="btn"><input type="image" value="ok" name="s1" id="btn_ok" class="dynamic_img" src="img/x.gif" alt="OK" /></p>
+<p class="btn"><button value="ok" name="s1" id="btn_ok" class="trav_buttons" alt="OK" /> OK </button></p>
 </form>
 </div>
-</br></br></br></br><div id="side_info">
+<br /><br /><br /><br /><div id="side_info">
 <?php
 include("Templates/multivillage.tpl");
 include("Templates/quest.tpl");
 include("Templates/news.tpl");
-include("Templates/links.tpl");
+if(!NEW_FUNCTIONS_DISPLAY_LINKS) {
+	echo "<br><br><br><br>";
+	include("Templates/links.tpl");
+}
 ?>
 </div>
 <div class="clear"></div>
@@ -170,11 +188,11 @@ include("Templates/res.tpl");
 <div id="stime">
 <div id="ltime">
 <div id="ltimeWrap">
-Calculated in <b><?php
-echo round(($generator->pageLoadTimeEnd()-$start)*1000);
+<?php echo CALCULATED_IN;?> <b><?php
+echo round(($generator->pageLoadTimeEnd()-$start_timer)*1000);
 ?></b> ms
 
-<br />Server time: <span id="tp1" class="b"><?php echo date('H:i:s'); ?></span>
+<br /><?php echo SEVER_TIME;?> <span id="tp1" class="b"><?php echo date('H:i:s'); ?></span>
 </div>
 	</div>
 </div>

@@ -5,27 +5,23 @@
 ##                     FIX BY RONIX                       ##
 ##                       TRAVIANZ                         ##
 ############################################################
-if($session->access!=BANNED){
+
 $topic_id = $_GET['idt'];
 $topics = $database->ShowTopic($topic_id);
+
+//Check if we're editing a valid answer (topic)
+if(empty($topics)) $alliance->redirect($_GET);
+
 foreach($topics as $top) {
 	$title = stripslashes($top['title']);
 	$ans = stripslashes($top['post']);
 	$ans = preg_replace('/\[message\]/', '', $ans);
 	$ans = preg_replace('/\[\/message\]/', '', $ans);
-	$alliance0 = $top['alliance0'];
-	$player0 = $top['player0'];
-	$coor0 = $top['coor0'];
-	$report0 = $top['report0'];
 }
 ?>
-<form method="post" name="post" action="allianz.php?s=2&fid2=<?php echo $_GET['pid']; ?>&pid=<?php echo $_GET['pid']; ?>&tid=<?php echo $_GET['idt']; ?>">
+<form method="post" name="post" action="allianz.php?s=2&fid2=<?php echo $_GET['fid2']; ?>&tid=<?php echo $_GET['idt']; ?>">
 	<input type="hidden" name="s" value="2">
 	<input type="hidden" name="tid" value="<?php echo $_GET['idt']; ?>">
-	<input type="hidden" name="alliance0" value="<?php echo $alliance0; ?>">
-	<input type="hidden" name="player0" value="<?php echo $player0; ?>">
-	<input type="hidden" name="coor0" value="<?php echo $coor0; ?>">
-	<input type="hidden" name="report0" value="<?php echo $report0; ?>">
 	<input type="hidden" name="editans" value="1">
 <table cellpadding="1" cellspacing="1" id="edit_post"><thead>
 	<tr>
@@ -35,9 +31,7 @@ foreach($topics as $top) {
 	<tr>
 		<th>Thread</th>
 		<td><?php echo $title; ?></td>
-
 	</tr>
-
 	<tr>
 	<td>
 	</td><td>
@@ -47,10 +41,10 @@ foreach($topics as $top) {
 					<a href="javascript:void(0);" bbType="d" bbTag="b" ><div title="bold" alt="bold" class="bbButton bbBold"></div></a>
 					<a href="javascript:void(0);" bbType="d" bbTag="i" ><div title="italic" alt="italic" class="bbButton bbItalic"></div></a>
 					<a href="javascript:void(0);" bbType="d" bbTag="u" ><div title="underlined" alt="underlined" class="bbButton bbUnderscore"></div></a>
-					<a href="javascript:void(0);" bbType="d" bbTag="alliance0" ><div title="Alliance" alt="Alliance" class="bbButton bbAlliance"></div></a>
-					<a href="javascript:void(0);" bbType="d" bbTag="player0" ><div title="Player" alt="Player" class="bbButton bbPlayer"></div></a>
-					<a href="javascript:void(0);" bbType="d" bbTag="coor0" ><div title="Coordinates" alt="Coordinates" class="bbButton bbCoordinate"></div></a>
-					<a href="javascript:void(0);" bbType="d" bbTag="report0" ><div title="Report" alt="Report" class="bbButton bbReport"></div></a>
+					<a href="javascript:void(0);" bbType="d" bbTag="alliance" ><div title="Alliance" alt="Alliance" class="bbButton bbAlliance"></div></a>
+					<a href="javascript:void(0);" bbType="d" bbTag="player" ><div title="Player" alt="Player" class="bbButton bbPlayer"></div></a>
+					<a href="javascript:void(0);" bbType="d" bbTag="coor" ><div title="Coordinates" alt="Coordinates" class="bbButton bbCoordinate"></div></a>
+					<a href="javascript:void(0);" bbType="d" bbTag="report" ><div title="Report" alt="Report" class="bbButton bbReport"></div></a>
 					<a href="javascript:void(0);" bbWin="resources" id="text_resourceButton"><div title="Resources" alt="Resources" class="bbButton bbResource"></div></a>
 					<a href="javascript:void(0);" bbWin="smilies" id="text_smilieButton"><div title="Smilies" alt="Smilies" class="bbButton bbSmilie"></div></a>
 					<a href="javascript:void(0);" bbWin="troops" id="text_troopButton"><div title="Troops" alt="Troops" class="bbButton bbTroop"></div></a>
@@ -81,7 +75,3 @@ foreach($topics as $top) {
 
 	<p class="btn"><input  type="image" id="fbtn_ok" value="ok" name="s1" class="dynamic_img" src="img/x.gif" alt="OK" /></form></p>
 <span style="color: #DD0000"><b>Warning:</b> you can't use the values <b>[message]</b> or <b>[/message]</b> in your post because it can cause problem with bbcode system.</span>
-	<?php }else{
-header("Location: banned.php");
-}
-?>
